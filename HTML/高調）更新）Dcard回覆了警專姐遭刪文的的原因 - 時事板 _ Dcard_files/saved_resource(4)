@@ -1,0 +1,38 @@
+
+var ftGUID_4215985="461072C32CB669";
+var ftConfID_4215985="0";
+var ftParams_4215985="ftx=&fty=&ftadz=&ftscw=&ft_custom=&ftOBA=1&ft_ifb=1&ft_domain=www.dcard.tw&ft_agentEnv=0&ft_referrer=https%3A%2F%2Fwww.dcard.tw%2F&cachebuster=992830.3034187396";
+var ftKeyword_4215985="";
+var ftCustom_4215985="";
+var ftSection_4215985="";
+var ftSegment_4215985="w2c,ag4c";
+var ftSegmentList_4215985=[{s:'w2c'},{s:'ag4c'}];
+var ftRuleMatch_4215985="0";
+var ftTimestamp_4215985="1626959077";
+var ftGeoC2_4215985="tw";
+var ftGeoState_4215985="txg";
+var ftGeoCity_4215985="taichung";
+var ftISP_4215985="cht.com.twchunghwa telecom data communication business group";
+var ftSpeed_4215985="broadband";
+var ftDMA_4215985="-1";
+var ftLong_4215985="120.67";
+var ftLat_4215985="24.14";
+var ftPostal_4215985="403 55";
+var ftTimeZone_4215985="800";
+var ftMobileCarrier_4215985="";
+var ftImp4215985 = {};
+ftImp4215985.privacy = "x";
+ftImp4215985.guidAge = "341";
+ftImp4215985.impID = "3937CA39-6442-F979-86B8-7B78C5F56750";
+ftImp4215985.duid = "FT:461072C32CB669";
+
+ftImp4215985.ft_tpplid = "";
+ftImp4215985.ft_c = {};
+ftImp4215985.gdpr = "";
+ftImp4215985.gdpr_consent = "";
+ftImp4215985.gdpr_pd = "";
+ftImp4215985.oob_consent = "0";
+ftImp4215985.gdprStoredConsent = "";
+ftImp4215985.us_privacy = "";
+
+document.write('<scr'+'ipt src="https://cdn.flashtalking.com/xre/421/4215985/3482425/js/j-4215985-3482425.js" id="ftscript_m4215985" name="ftscript_m4215985"></scr'+'ipt>');

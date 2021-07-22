@@ -1,0 +1,342 @@
+(function(){
+//$(function(){
+
+	/*================== case-32-adH01-超級大橫幅(圖片+MP4影音) =============================*/
+	//document.write('<link href="adH01.css" rel="stylesheet" type="text/css"/>');
+	document.write('<link href="https://static.ettoday.net/ad/adH01/adH01.css" rel="stylesheet" type="text/css"/>');
+	document.write('<div class="adH01" id="'+ adH01Var.packId +'"></div>');//寫入容器
+	ga('create', 'UA-52510577-4', 'auto', {'name': 'adH01'});
+	ga('adH01.require', 'displayfeatures');
+	ga('adH01.send', 'pageview');
+
+	if (adH01Var.imgSrc2 != "") { //素材二非空值 (純圖片蓋版)
+		var sAdH01Html = '\
+			<div class="overlay"></div>\
+			<div class="btn_switch"><span class="btn btn_open"></span><span class="btn btn_close"></span></div>\
+			<div class="btn_slidevideo" style="background-color:#000;color:#fff;font-size:13px;position:fixed;width:240px;height:30px;line-height:30px;right:10px; bottom:145px; z-index:99999999;border: 0px solid blue;"><a id="slidevideo_link" href="//ad.ettoday.net/adclick.php?bid='+ adH01Var.bid +'&bannerid='+ adH01Var.bannerid +'" rel="nofollow" target="_blank">了解更多</a> <a id="slidevideo_close" href="javascript:void(0)">關閉廣告</a></div>\
+			<a class="video" href="//ad.ettoday.net/adclick.php?bid='+ adH01Var.bid +'&bannerid='+ adH01Var.bannerid +'" rel="nofollow" target="_blank" style="background:url('+ adH01Var.imgSrc+') no-repeat;width:'+ adH01Var.width+'px;height:'+ adH01Var.height+'px;text-align:left;display:block">\
+				<div class="v_box">\
+					<img src="'+ adH01Var.imgSrc2+'" style="width:auto;height:250px" />\
+				</div>\
+			</a>';
+	}else{ // 超級大橫幅影音
+		var sAdH01Html = '\
+			<div class="overlay"></div>\
+			<div class="btn_switch"><span class="btn btn_open"></span><span class="btn btn_close"></span></div>\
+			<div class="btn_slidevideo" style="background-color:#000;color:#fff;font-size:13px;position:fixed;width:240px;height:30px;line-height:30px;right:10px; bottom:145px; z-index:99999999;border: 0px solid blue;"><a id="slidevideo_link" href="//ad.ettoday.net/adclick.php?bid='+ adH01Var.bid +'&bannerid='+ adH01Var.bannerid +'" rel="nofollow" target="_blank">了解更多</a> <a id="slidevideo_close" href="javascript:void(0)">關閉廣告</a></div>\
+			<a class="video" href="//ad.ettoday.net/adclick.php?bid='+ adH01Var.bid +'&bannerid='+ adH01Var.bannerid +'" rel="nofollow" target="_blank" style="background:url('+ adH01Var.imgSrc+') no-repeat;width:'+ adH01Var.width+'px;height:'+ adH01Var.height+'px;text-align:left;display:block">\
+				<div class="v_box">\
+					<video src="'+ adH01Var.videoMp4+'" poster="" style="width:auto;height:250px" controls="controls" webkit-playsinline playsinline autoplay muted preload="auto" />\
+				</div>\
+			</a>';
+	}
+
+	//建立結構================
+	function fnAdM01Creat(){
+		if($(".adH01 video").length<1){
+			setTimeout(function(){
+				//$("body").prepend(sAdH01Html);
+				$(".adH01").prepend(sAdH01Html);
+
+				//純側欄影音 / 純蓋版處理 (隱藏970x250)
+				if (adH01Var.imgSrc == "") {//素材一圖片空值時
+					$(".adH01").css({"height":"0px","overflow":"hidden"});
+				}
+
+				//影片位置調整 (預設為靠左)
+				if (adH01Var.text_1 == "影片中") {
+					$(".adH01 .v_box").addClass("video-middle");
+				} else if (adH01Var.text_1 == "影片右") {
+					$(".adH01 .v_box").addClass("video-right");
+				}
+
+				//初始檢測 cookie (蓋版廣告才執行)=======================================
+				if (adH01Var.content == "蓋版廣告") {
+					var countName = adH01Var.packId; //定義cookie名稱
+					var expireName = adH01Var.packId +"-expire"; //定義記錄效期的cookie名稱
+
+					var expireHour = Number(adH01Var.cookieHour); //定義cookie到期時數
+						if (expireHour == 0 || isNaN(expireHour)) { expireHour= 1440; } //★★★若沒指定，預設 1440 分)★★★
+						expireHour = expireHour / 60; // 將分鐘數換算成時數
+					var adShow = 1; //頻次固定為 1 次
+
+					if($.cookie(countName)==null){ //先判斷是否已有 cookie 值, 沒有的話，新增一組
+						fnAdH01Show(); //展開大廣告
+						//用毫秒表示
+						var iExpireDate = new Date();
+						iExpireDate.setTime(iExpireDate.getTime() + (expireHour * 60 * 60 * 1000)); // cookies 效期為 n 小時
+
+						$.cookie(countName, 1 ,{ expires: iExpireDate, domain: 'ettoday.net', path: '/' }); //設定key跟value，一定要下 expires 及 path 參數
+						$.cookie(expireName, iExpireDate ,{ expires: iExpireDate, domain: 'ettoday.net', path: '/' }); //設定key跟value，一定要下 expires 及 path 參數
+					}else{
+						var countVal = $.cookie(countName); //取得目前cookie值
+						var expireVal = new Date($.cookie(expireName)); //取得記錄效期的cookie值
+
+						countVal++; //值加1
+
+						if(countVal < adShow +1 ){ //在n次內會執行
+							fnAdH01Show(); //展開大廣告
+						}else{
+							fnAdH01BtnShow(".adH01 .btn_open");//顯示展開大廣告按鍵
+							$(".adH01").parent().css({"z-index":"1","position":"relative"});//讓廣告層級最上面
+						}
+						$.cookie(countName, countVal,{ expires: expireVal, domain: 'ettoday.net', path: '/'}); //次數更新到 cookies 中，效期設為第一次的cookies效期
+					}
+				}
+				
+				//展開大廣告按鍵
+				$(".adH01 .btn_open").on("click", function(){
+					fnAdH01Show();
+				});
+
+				//關閉大廣告按鍵
+				$(".adH01 .btn_close").on("click", function(){
+					fnAdH01Hide();
+				});
+
+				//點擊廣告
+				$(".adH01 a.video").on("click", function(){
+					fnAdH01Hide();
+					ga("adH01.send", "event", "PC 超級大橫幅 - 素材編號："+adH01Var.bannerid+"", "點擊廣告", ""+adH01Var.videoMp4+"", {'nonInteraction': 0});
+					console.log('點擊廣告');
+				});
+
+				//影音廣告處理
+				if (adH01Var.videoMp4 != "") {
+				
+					//關閉 SlideVideo 側欄影音按鍵
+					$(".adH01 .btn_slidevideo a#slidevideo_close").on("click", function(){
+						$(window).off("scroll.adH01");//解除滾動監聽
+						//video.pause();
+						video.muted = true;
+						fnAdH01SlideVideoEnd();
+						//種 cookies			
+						var iExpireDateSV = new Date();
+						iExpireDateSV.setTime(iExpireDateSV.getTime() + (expireHourSV * 60 * 60 * 1000)); // cookies 效期為 n 小時
+						$.cookie(countNameSV, 1 ,{ expires: iExpireDateSV, domain: 'ettoday.net', path: '/' }); //設定key跟value，一定要下 expires 及 path 參數
+					});
+
+					//播放進度統計
+					var video=$(".adH01 video").get(0);
+					video.volume=0.5; //音量設定
+
+					//video.play();//自動播放
+					video.addEventListener('play', function() { //播放監聽
+						ga("adH01.send", "event", "PC 超級大橫幅 - 素材編號："+adH01Var.bannerid+"", "播放影片", ""+adH01Var.videoMp4+"", {'nonInteraction': 0});
+						console.log('start');
+						
+						if(video.readyState > 0) {//取得影片總秒數及各偵測點秒數
+							duration = video.duration;
+							querterTime = duration / 4;
+							time_25 = querterTime;
+							time_50 = querterTime * 2;
+							time_75 = querterTime * 3;
+						}
+						
+					}, false);
+
+					/*
+					video.addEventListener('pause', function() { //暫停監聽
+						alert("暫停");
+					}, false);
+					*/
+
+					video.addEventListener('ended', function() { //播完監聽
+						if(time_100_count < 1){
+							ga("adH01.send", "event", "PC 超級大橫幅 - 素材編號："+adH01Var.bannerid+"", "100%", ""+adH01Var.videoMp4+"", {'nonInteraction': 0});
+							console.log('100%');
+							time_100_count ++;
+						}
+						video.play();
+					}, false);
+
+					var time_25_count = 0;
+					var time_50_count = 0;
+					var time_75_count = 0;
+					var time_100_count = 0;
+					video.addEventListener('timeupdate', function(){ // 觀看時間監聽
+						var currentTime =  video.currentTime;
+						//console.log (currentTime);
+						if(currentTime >= time_25){
+							if(time_25_count < 1){ //只要送出一次
+								ga("adH01.send", "event", "PC 超級大橫幅 - 素材編號："+adH01Var.bannerid+"", "25%", ""+adH01Var.videoMp4+"", {'nonInteraction': 0});
+								console.log('25%');
+								time_25_count ++;
+							}
+						}
+						if(currentTime >= time_50){
+							if(time_50_count < 1){
+								ga("adH01.send", "event", "PC 超級大橫幅 - 素材編號："+adH01Var.bannerid+"", "50%", ""+adH01Var.videoMp4+"", {'nonInteraction': 0});
+								console.log('50%');
+								time_50_count ++;
+							}
+						}
+						if(currentTime >= time_75){
+							if(time_75_count < 1){
+								ga("adH01.send", "event", "PC 超級大橫幅 - 素材編號："+adH01Var.bannerid+"", "75%", ""+adH01Var.videoMp4+"", {'nonInteraction': 0});
+								console.log('75%');
+								time_75_count ++;
+							}
+						}
+					}, false);
+
+					// Slide Video 側邊影音 =======================================
+					function fnAdH01SlideVideoShow(){
+						$.fn.isOnScreen = function(){//檢查元素是否在 viewport 內
+						    var win = $(window);
+						    var viewport = {
+						        top : win.scrollTop(),
+						        left : win.scrollLeft()
+						    };
+						    viewport.right = viewport.left + win.width();
+						    viewport.bottom = viewport.top + win.height();
+						    var bounds = this.offset();
+						    bounds.right = bounds.left + this.outerWidth();
+						    bounds.bottom = bounds.top + this.outerHeight();
+						    return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
+						};
+
+						var adH01_scrollTimer = null;
+						$(window).on("scroll.adH01", function(){//監測滾動
+							
+							if (adH01_scrollTimer) {
+								clearTimeout(adH01_scrollTimer);
+							};
+							adH01_scrollTimer = setTimeout(function () {
+								if($(".adH01_box").length<1){
+									if ($("#adH01-"+ adH01Var.bannerid +"").isOnScreen()) {//元素在 viewpart 之內：結束 SlideVideo
+										//console.log('元素在 viewpart 之內');
+										//alert("元素在 viewpart 之內");
+										//video.play();
+										fnAdH01SlideVideoEnd();
+									} else { //元素在 viewpart 之外：啟用 SildeVideo
+										//alert("元素在 viewpart 之外");
+										//console.log('元素在 viewpart 之外');
+										//video.pause();
+										fnAdH01SlideVideoStart();
+									};
+								}
+							}, 100);
+						});
+					}
+
+					//啟用 SildeVideo 動作================
+					function fnAdH01SlideVideoStart(){
+						$(".adH01 .btn_slidevideo").show();
+						$(".adH01").addClass("adH01_SlideVideo");
+						$(".adH01").parent().css({"position":"relative","z-index":"101"});
+					}
+
+					//結束 SildeVideo 動作================
+					function fnAdH01SlideVideoEnd(){
+						$(".adH01 .btn_slidevideo").hide();
+						$(".adH01").removeClass("adH01_SlideVideo");
+						$(".adH01").parent().css({"position":"relative","z-index":"1"});
+					}
+
+					//Slide Video：超級大橫幅在 viewport 之外時，啟動 Slide Video
+					if (adH01Var.text_2 == "側邊影音") {
+						var countNameSV = adH01Var.packId +"-SV"; //定義cookie名稱
+						var expireNameSV = adH01Var.packId +"-SV-expire"; //定義記錄效期的cookie名稱
+
+						var expireHourSV = Number(adH01Var.cookieHour); //定義cookie到期時數
+							if (expireHourSV == 0 || isNaN(expireHourSV)) { expireHourSV= 1440; } //★★★若沒指定，預設 1440 分)★★★
+							expireHourSV = expireHourSV / 60; // 將分鐘數換算成時數
+
+						if($.cookie(countNameSV)==null){ //先判斷是否已有 cookie 值, 沒有的話，就執行 Slide Video, 且不種 cookies
+							fnAdH01SlideVideoShow(); //啟用 SlideVideo
+						}else{
+							//沒有 SlideVideo
+						}
+					}
+				}
+
+			}, 100);
+		};
+	};
+
+	//按鈕狀態===============
+	function fnAdH01BtnShow(iBtn){
+		$(".adH01 .btn").hide();
+		$(iBtn).show();
+	}
+
+	//展開大廣告動作================
+	function fnAdH01Show(){
+
+		ga("adH01.send", "event", "PC 超級大橫幅 - 素材編號："+adH01Var.bannerid+"", "顯示蓋版廣告", ""+adH01Var.videoMp4+"", {'nonInteraction': 0});
+		console.log('顯示蓋版廣告');
+
+		$('body').css({overflow:'hidden'});//鎖住 Scroll
+
+		fnAdH01BtnShow(".adH01 .btn_close");
+		$(".adH01").addClass("adH01_box");
+		$(".adH01").parent().css({"z-index":"999999888"});//讓廣告層級最上面
+
+		//水平與垂直置中
+		if (adH01Var.imgSrc2 != "") { //素材二非空值 (純圖片蓋版)
+			$(".adH01_box a.video img").attr('style', 'display:block;width: 100%; height: auto; position: absolute; top:50%; left: 50%; transform: translate(-50%, -50%);');
+		} else {
+			$(".adH01_box a.video video").attr('style', 'width: 100%; height: auto; position: absolute; top:50%; left: 50%; transform: translate(-50%, -50%);');
+		}
+
+		// 隱藏果實 MIC 廣告 & 影音巨幅
+		var adH01css = '#div-incover-ad, #ONEAD-fade-wrapper0, #ONEAD_incover_wrapper-0, .adV01 {visibility:hidden}',
+		adH01head = document.head || document.getElementsByTagName('head')[0],
+		adH01style = document.createElement('style');
+		adH01style.type = 'text/css';
+		adH01style.appendChild(document.createTextNode(adH01css));
+		adH01head.appendChild(adH01style);
+
+		$('.adH01 a.video .v_box').append('<a title="了解更多" href="//ad.ettoday.net/adclick.php?bid='+ adH01Var.bid +'&bannerid='+ adH01Var.bannerid +'" rel="nofollow" target="_blank" style="display:block;position:absolute;width:100%;height:calc(100% - 90px);border: 0px solid blue; left:0; top:0; z-index:99999999"></a>');
+
+		//移除影片位置調整 class
+		if (adH01Var.text_1 == "影片中") {
+			$(".adH01 .v_box").removeClass("video-middle");
+		} else if (adH01Var.text_1 == "影片右") {
+			$(".adH01 .v_box").removeClass("video-right");
+		}
+
+	};
+
+	//關閉大廣告動作================
+	function fnAdH01Hide(){
+		fnAdH01BtnShow(".adH01 .btn_open");
+		$(".adH01").removeClass("adH01_box");
+		$(".adH01").parent().css({"z-index":"1","position":"relative"});//讓廣告層級最上面
+
+		$('body').css({overflow:'auto'});//解除鎖住 Scroll
+
+		//純蓋版處理 (隱藏970x250)
+		if (adH01Var.imgSrc == "") {//素材一圖片空值時
+			$(".adH01 .btn_switch").remove();
+			$(".adH01 video").get(0).muted= true;
+		}
+
+		// 2秒後，顯示果實 MIC 廣告 & 影音巨幅
+		setTimeout( function(){
+			var adH01css = '#div-incover-ad, #ONEAD-fade-wrapper0, #ONEAD_incover_wrapper-0, .adV01 {visibility:visible}',
+			adH01head = document.head || document.getElementsByTagName('head')[0],
+			adH01style = document.createElement('style');
+			adH01style.type = 'text/css';
+			adH01style.appendChild(document.createTextNode(adH01css));
+			adH01head.appendChild(adH01style);			
+		}, 2000);
+
+		$('.adH01 a.video a').remove();
+		
+		//恢復影片大小及位置
+		$(".adH01 a.video video").attr('style', 'width: auto; height: 250px; position: absolute; top:auto; left: auto; transform: none');
+		//恢復影片位置調整 (預設為靠左)
+		if (adH01Var.text_1 == "影片中") {
+			$(".adH01 .v_box").addClass("video-middle");
+		} else if (adH01Var.text_1 == "影片右") {
+			$(".adH01 .v_box").addClass("video-right");
+		}
+	};
+
+	//初始化
+	fnAdM01Creat();
+
+//});
+})();

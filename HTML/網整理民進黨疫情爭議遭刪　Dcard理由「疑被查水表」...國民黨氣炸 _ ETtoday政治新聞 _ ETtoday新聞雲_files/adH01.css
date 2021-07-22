@@ -1,0 +1,27 @@
+@charset "utf-8";
+/* CSS Document */
+
+.adH01{position:relative;}
+.adH01 .btn_open{display:none; background:url(//static.ettoday.net/ad/adH01/btn_open_close.png) no-repeat left top; width:80px; height:20px; cursor:pointer; position:absolute; right:0; top:0px;  z-index:2;}
+.adH01 .btn_close{display:none; background:url(//static.ettoday.net/ad/adH01/btn_open_close.png) no-repeat left -20px; width:80px; height:20px; cursor:pointer; position:fixed; top:10px; right:10px; z-index:100; }
+.adH01 .v_box {position: absolute; top:0; left: 0px;}
+.adH01 .v_box.video-middle {left: 263px;}
+.adH01 .v_box.video-right {left: 526px;}
+.adH01 .v_box img {display:none;}/*圖片蓋版預設關閉*/
+
+/*蓋版*/
+.adH01_box{ left:0px; top:0px; z-index:888888!important; min-width:100%;height:100%;border:0px solid red}
+.adH01_box .overlay{ width:100%; min-height:100%; background-color:#333; opacity:0.8; position:fixed; left:0px; top:0px; z-index:1; }
+.adH01_box a.video {background-image:url()!important;position:fixed;top:10px;left:0;cursor:pointer;z-index:99!important;width:100%!important;height:100%!important;text-align:center!important;border:0px solid red}
+.adH01_box .v_box {width: 80%; height:0; padding-bottom: 44.8%; position: fixed; top:50%; left: 50%; transform: translate(-50%, -50%);border: 0px solid red;}
+
+/*Slide Video*/
+.adH01 .btn_slidevideo{display:none;}
+.adH01 .btn_slidevideo a {color:#fff;position:absolute;top:0}
+.adH01 .btn_slidevideo a#slidevideo_link {left:10px}
+.adH01 .btn_slidevideo a#slidevideo_close {right:10px}
+.adH01 .btn_slidevideo a {color:#fff;position:absolute}
+.adH01_SlideVideo{}
+.adH01_SlideVideo a.video {background-image:url()!important;position:fixed;bottom:10px;right:10px;cursor:pointer;z-index:99999!important;width:240px!important;height:135px!important;text-align:center!important;border:0px solid red}
+.adH01_SlideVideo .v_box {position: static; top:0; left:0}
+.adH01_SlideVideo .v_box video { width:100%!important;height:auto!important;position: relative; top:0; left:0!important;border: 0px solid blue;}
